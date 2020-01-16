@@ -1,0 +1,119 @@
+{% extends "POC/base.html" %}
+{%load static%}
+{%block contentsearch%}
+{%if request.user.is_superuser%}
+<div class="container">
+  <form action="{% url 'search_results' %}" method="get">
+    <input name="p" id="test" type="text" placeholder="Name">
+    <input name="q"  id="test1" type="text" placeholder="Country">
+    <input name="r"  id="test2" type="text" placeholder="City">
+    <button type="submit" name="button" class="btn btn-success btn-sm mt-1 mb-1">Search</button>
+  </form>
+  <br>
+<br>
+{%else%}
+{%endif%}
+{%endblock%}
+
+
+{% block content %}
+
+{%if request.user.is_superuser%}
+
+
+    <table class="table">
+      <thead class="thead-dark">
+    <tr>
+        <th scope="col">Name</th>
+
+        <th scope="col">Age</th>
+        <th scope="col">Country</th>
+        <th scope="col">City</th>
+        <th scope="col">Gender</th>
+        <th scope="col">Zip</th>
+        <th scope="col">Address</th>
+        <th scope="col">amount_required</th>
+        <th scope="col">business_type</th>
+        <th scope="col">phone</th>
+        <th scope="col">Approve_Status</th>
+        <th scope="col">Action</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for people in peoples %}
+    <tr>
+        <td>{{ people.name|truncatechars:9  }}</td>
+
+        <td>{{ people.age }}</td>
+          <td>{{ people.country }}</td>
+            <td>{{ people.city }}</td>
+              <td>{{ people.gender }}</td>
+                <td>{{ people.zip }}</td>
+                <td>{{ people.address|truncatechars:15 }}</td>
+                <td>{{ people.amount_required }}</td>
+                <td>{{ people.business_type }}</td>
+                <td>{{ people.phone }}</td>
+                <td>{{ people.Approve_Reject }}</td>
+
+                <td>  <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'person_change' people.id %}">Approve Now</a>
+                  <!-- <a class="btn btn-danger btn-sm mt-1 mb-1" id="deletebtn"  href="{% url 'person_delete' people.id %}">Delete</a> -->
+                  <!-- {%if request.user.is_superuser%}
+                  <button type="button" class="btn btn-primary" id="apvbtn">Approve</button>
+                  <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'person_change' people.id %}">Approve</a>
+                  {%endif%} -->
+</td>
+
+    </tr>
+
+        </tbody>
+          {% endfor %}
+
+</table>
+
+<div class="container">
+        {% if is_paginated %}
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+      {% if page_obj.number == i %}
+        <li class="active" class="page-item" class="page-link"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <li><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+
+    {% endif %}
+  </ul>
+
+{% endif %}
+</div>
+{%else%}
+<center><h1>Thank You For Applying Loan<h1></center>
+<center><h1>Please wait for super user to approve Your Loan<h1></center>
+<center><h1>Now Please Login with super user to approve Loan<h1></center>
+{%endif%}
+
+
+{% endblock content %}
+
+
+{%block script%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ <script src="{% static 'POC/list.js' %}"></script>
+<script>
+ $(document).on('click', '#apvbtn', function(){
+   $("#apvbtn").text('Approved');
+
+ })
+ </script>
+{%endblock%}

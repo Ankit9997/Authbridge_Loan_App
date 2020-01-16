@@ -1,0 +1,20 @@
+{% extends "POC/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<br>
+<br>
+    <div class="content-section">
+    <center><h1>Welocome To Loan Application</h1></center>
+    </div>
+    <br>
+    <br>
+{%if request.user.is_superuser%}
+    <form action="{% url 'person_changelist' %}">
+    <center><input type="submit" style="height:70px;width:200px" class="btn btn-success" value="List of Applications" /></center>
+</form>
+{%else%}
+<form action="{% url 'person_add' %}">
+    <center><input type="submit" style="height:70px;width:200px" class="btn btn-success" value="Apply Now" /></center>
+</form>
+{%endif%}
+{% endblock content %}
